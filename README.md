@@ -3,8 +3,8 @@
 Plataforma independente de investigação e verificação de alegações públicas,
 baseada em evidências rastreáveis, auditoria adversarial e revisão humana.
 
-> **Estado:** Etapas 1 e 3 implementadas — domínio, banco, agentes com provedor falso, worker e
-> painel de revisão. Sem provedor de IA real, sem páginas públicas, sem deploy e sem publicação.
+> **Estado:** Etapas 1 e 3 implementadas; Etapa 2 em andamento — banco no Supabase criado e protegido,
+> adaptador Gemini e worker agendado prontos (aguardam chave e segredos). Sem deploy e sem publicação.
 
 **Princípio central:** não basta uma IA dizer que algo é verdadeiro ou falso — é preciso
 mostrar como a conclusão foi alcançada.
@@ -53,6 +53,7 @@ Cada arquivo tem uma função única. Decisões aprovadas vivem **apenas** em `D
 | [docs/RISKS.md](docs/RISKS.md) | Riscos editoriais, jurídicos, técnicos, operacionais e financeiros |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | Plano de implementação em tarefas pequenas e seu estado |
 | [docs/DECISIONS.md](docs/DECISIONS.md) | Registro canônico de decisões (pendentes e aprovadas) |
+| [docs/OPERATIONS.md](docs/OPERATIONS.md) | Serviços, configuração de segredos, rotina e pausa |
 
 O Documento Mestre (v1.0) é a especificação de origem; estes arquivos registram o que
 foi decidido a partir dele, sem copiá-lo.

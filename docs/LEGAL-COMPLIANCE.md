@@ -47,6 +47,12 @@ exigem análise de advogado(a) antes de publicar.
 - Assinaturas pagas do Claude (Pro etc.) **não incluem** acesso à API; a API é contratada e cobrada à parte no Console. (fonte 7)
 - Preços por token devem ser lidos na página oficial no momento da contratação (fonte 8) — não foram
   verificados nesta auditoria. ⚖️ Ler a política de uso do fornecedor sobre conteúdo eleitoral.
+- **Gemini API, faixa gratuita** (verificado em 23/10/2026, fonte 9): modelos Flash sem custo, mas o
+  plano gratuito indica "Content used to improve our products" e busca com Google Search não está
+  disponível na faixa gratuita. Limites de requisição aparecem só no AI Studio. Consequências:
+  não enviar dados pessoais não públicos (formulários de contato ficam fora do fluxo de IA) e tratar
+  rascunhos de veredito como potencialmente lidos por terceiros. ⚖️ Ler os termos adicionais da
+  Gemini API antes do uso em produção.
 
 ## Fontes
 
@@ -58,3 +64,4 @@ exigem análise de advogado(a) antes de publicar.
 6. [Meta — content_publishing_limit](https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/content_publishing_limit)
 7. [Claude Help Center — plano pago e API](https://support.claude.com/en/articles/9876003)
 8. [Preços da API Claude](https://platform.claude.com/docs/en/about-claude/pricing)
+9. [Gemini API — preços e faixa gratuita](https://ai.google.dev/gemini-api/docs/pricing)
