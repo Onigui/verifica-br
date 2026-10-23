@@ -8,14 +8,14 @@ Não avançar de etapa sem cumprir os critérios em [PRODUCT.md](PRODUCT.md).
 | # | Tarefa | Estado |
 |---|---|---|
 | 1.1 | Monorepo pnpm, TypeScript estrito, ESLint, Vitest, `.gitignore`, `.env.example` | feito |
-| 1.2 | CI no GitHub Actions: install, lint, typecheck, test com Postgres, secretlint, migrations | feito (aguarda 1ª execução no GitHub) |
+| 1.2 | CI no GitHub Actions: install, lint, typecheck, test com Postgres, secretlint, migrations | feito (CI verde em 22/10/2026) |
 | 1.3 | `packages/db`: migrations SQL, triggers de imutabilidade e auditoria, `docker-compose` | feito |
 | 1.4 | `packages/core`: estados, risco, `settings` (kill switch, auto-publish off), orçamento | feito |
 | 1.5 | Verificador de citações com fixtures e proteção contra URLs internas | feito |
 | 1.6 | `packages/ai`: `LLMProvider`, provedor falso, contratos zod, prompts v1, custos | feito |
 | 1.7 | `apps/worker`: fila com SKIP LOCKED, tentativas limitadas, orçamento, pausa | feito |
 
-**Saída:** critérios 1–9 da Etapa 1 cumpridos localmente; falta confirmar no CI do GitHub.
+**Saída:** critérios 1–9 da Etapa 1 cumpridos localmente e no CI do GitHub.
 
 ## Etapa 2 — Integrações reais (após D3–D5)
 
