@@ -43,8 +43,8 @@ viole termos, impulsionamento pago de conteúdo político.
 
 Verificáveis localmente e no CI, sem chaves reais:
 
-1. `pnpm install && pnpm test && pnpm build` passam em máquina limpa e no GitHub Actions.
-2. Migrations criam as tabelas do [modelo de dados](ARCHITECTURE.md#modelo-de-dados-mvp) num Postgres em Docker.
+1. `pnpm install --frozen-lockfile && pnpm check` (lint, typecheck, testes, secretlint) passa em máquina limpa e no GitHub Actions.
+2. Migrations criam as tabelas do [modelo de dados](ARCHITECTURE.md#modelo-de-dados-mvp) num Postgres 16 limpo e são idempotentes.
 3. Testes provam que **um veredito aprovado não pode ser alterado** — só substituído por nova versão com justificativa.
 4. Testes provam que alegação de **risco alto não chega a "aprovada" sem revisão humana**.
 5. Testes provam que **publicação automática está desativada** por padrão e que o interruptor geral bloqueia execuções.
@@ -53,4 +53,4 @@ Verificáveis localmente e no CI, sem chaves reais:
 8. Toda mudança de status gera linha em `audit_logs`.
 9. `.env.example` documenta variáveis; varredura de segredos no CI não encontra credenciais.
 
-A Etapa 2 (provedor de IA real, banco hospedado, deploy de staging) só começa com D2–D5 aprovadas.
+A Etapa 2 (provedor de IA real, banco hospedado, deploy de staging) só começa com D3–D5 aprovadas.

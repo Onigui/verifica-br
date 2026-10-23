@@ -1,4 +1,7 @@
-# Arquitetura mínima (proposta — aguarda aprovação D2/D3)
+# Arquitetura mínima (aprovada em 22/10/2026 — D2)
+
+Estado: `packages/core`, `packages/ai`, `packages/db` e `apps/worker` implementados (Etapa 1).
+`apps/web` ainda não existe (Etapa 3).
 
 Objetivo: o menor conjunto de peças que cumpre o MVP e pode crescer até os "engines" do
 Documento Mestre **sem reescrita** — a lógica de domínio fica em pacotes TypeScript puros,
@@ -19,7 +22,7 @@ independentes de framework e de hospedagem.
                  └──────────────┬──────────────┘      │ prompts versionados, custo   │
                                 │                     └──────────────┬───────────────┘
                  ┌──────────────▼──────────────┐      ┌──────────────▼───────────────┐
-                 │ packages/db (Prisma)        │◄─────│ apps/worker (Node CLI)       │
+                 │ packages/db (SQL + postgres)│◄─────│ apps/worker (Node CLI)       │
                  │ Postgres                    │      │ processa fila `jobs`         │
                  └─────────────────────────────┘      │ roda via GitHub Actions      │
                                                       └──────────────────────────────┘
@@ -32,25 +35,25 @@ independentes de framework e de hospedagem.
 | Monorepo | pnpm workspaces | Já instalado; isola domínio | — |
 | Web pública + admin | **Um** app Next.js | Um deploy, uma autenticação | Separar admin se necessário |
 | Backend | Route handlers do Next + `packages/core` | NestJS separado exigiria outro serviço hospedado agora | `packages/core` é importado por um NestJS futuro sem mudança |
-| Banco | Postgres (Supabase) + Prisma | Stack já dominada; Postgres é portátil | Mesmo schema em qualquer Postgres |
+| Banco | Postgres + migrations em SQL puro + driver `postgres` (A4) | Regras críticas (imutabilidade, auditoria) ficam em triggers; sem binários nativos | Mesmo schema em qualquer Postgres (Supabase ou outro) |
 | Auth | Supabase Auth, só para admin | Público não precisa de login | Papéis (revisor, editor) |
 | Execução de agentes | Tabela `jobs` + `apps/worker` disparado por GitHub Actions (cron e manual) | Investigação leva minutos; não depende do PC ligado | Worker dedicado (Render/Railway) ou fila Redis quando o volume justificar |
 | IA | `LLMProvider` + adaptador Anthropic API; provedor falso para testes | Troca de fornecedor sem tocar no domínio | Outros adaptadores |
 | Busca de evidências | Ferramenta de busca do provedor de IA + **verificador de citações** próprio | Evita citações inventadas | Google Fact Check API, fontes cadastradas |
 | Carrossel | HTML → JPEG renderizado no servidor (Playwright ou `@vercel/og`) | Instagram aceita só JPEG; sem imagens geradas por IA | Publicação via API oficial |
-| CI | GitHub Actions: lint, typecheck, testes, varredura de segredos | Grátis para repositório público | Deploy de preview |
+| CI | GitHub Actions: lint, typecheck, testes com Postgres real, secretlint, migrations em banco limpo | Grátis para repositório público | Deploy de preview |
 
 Fora do MVP: n8n, Redis, NestJS separado, Storage de mídia (carrossel é gerado sob demanda).
 
 ## Modelo de dados (MVP)
 
-Derivado do modelo conceitual do Documento Mestre, com ajustes:
+Fonte da verdade: `packages/db/migrations/`. Resumo, derivado do modelo conceitual do Documento Mestre:
 
 - `claims` — `original_text` (imutável), `normalized_text`, `attributed_to`, `original_source_url`,
   `source_platform`, `stated_at`, `topic`, `claim_type`, `risk_level`, `status`.
 - `sources` — `url` (única), `publisher`, `source_type`, `reliability_notes`.
 - `evidence` — `claim_id`, `source_id`, `excerpt`, `accessed_at`, `data_period`, `stance`
-  (`supports|contradicts|context`), `limitations`, `citation_check` (`ok|failed|pending`), `added_by` (`human|agent_run_id`).
+  (`supports|contradicts|context`), `limitations`, `citation_check` (`pending|ok|failed|unsupported`), `added_by` (`human|agent_run_id`).
 - `investigations` — execução por alegação, `methodology_version`, status, erros.
 - `agent_runs` — `role`, `provider`, `model`, `prompt_version`, tokens, `cost_estimate_usd`, entrada/saída (JSON).
 - `verdict_versions` — `claim_id`, `version`, `verdict`, `robustness`, `rationale`, `limitations`,
@@ -62,7 +65,21 @@ Derivado do modelo conceitual do Documento Mestre, com ajustes:
 - `jobs` — fila simples (`type`, `payload`, `status`, `attempts`, `max_attempts`, `locked_at`).
 - `settings` — `kill_switch`, `auto_publish_enabled=false`, `max_cost_per_investigation_usd`, `monthly_budget_usd`.
 
-Regras no banco: `verdict_versions` sem UPDATE/DELETE (trigger), `UNIQUE(claim_id, version)`.
+Regras garantidas pelo próprio banco (valem mesmo para SQL direto):
+
+- `verdict_versions`, `reviews`, `corrections`, `agent_runs` e `audit_logs` são somente-inserção;
+- `claims.original_text` é imutável e alegações não são apagadas;
+- `reviews.reviewer_type` só aceita `human`;
+- toda mudança de status ou risco de alegação gera `audit_logs` com o ator da transação
+  (`app.actor_type` / `app.actor_id`).
+
+## Fluxo do worker
+
+`investigate` (job) → checa kill switch e limite de investigações por alegação → investigador
+(com orçamento checado antes) → verificador de citações em cada evidência → auditor (vê o status
+das citações) → versão proposta só com evidências confirmadas → `awaiting_review`.
+Falha do provedor devolve a alegação a `draft` e o job é tentado de novo; falta de orçamento
+encerra sem nova tentativa; kill switch ou provedor não configurado devolvem o job à fila intacto.
 
 ## Ambientes e segredos
 
@@ -71,6 +88,8 @@ ambiente do provedor de hospedagem e em GitHub Secrets; `.env.example` sem valor
 
 ## Controles de custo
 
-Limite por investigação e orçamento mensal verificados **antes** de cada chamada; número máximo
-de rodadas por agente; nenhuma execução em laço sem limite; custo gravado em `agent_runs`.
-Além disso, limite de gasto configurado no painel do fornecedor da API.
+Limite por investigação e orçamento mensal verificados **antes** de cada chamada (padrão 0 =
+nenhum gasto real permitido); máximo de investigações automáticas por alegação
+(`max_agent_rounds_per_investigation`, padrão 2); nenhuma execução em laço sem limite; custo
+gravado em `agent_runs`. Preços vêm de `AI_PRICING_JSON`, copiados da página oficial — sem preço
+configurado, provedor real é recusado. Além disso, limite de gasto no painel do fornecedor.

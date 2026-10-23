@@ -1,0 +1,15 @@
+{
+  "name": "@verifica-br/worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "start": "tsx src/main.ts"
+  },
+  "dependencies": {
+    "@verifica-br/ai": "workspace:*",
+    "@verifica-br/core": "workspace:*",
+    "@verifica-br/db": "workspace:*"
+  }
+}

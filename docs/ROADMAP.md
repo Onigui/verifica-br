@@ -3,21 +3,21 @@
 Cada tarefa = uma branch + um PR pequeno, com testes. Tamanho: P (≤ meio dia), M (≤ 1 dia).
 Não avançar de etapa sem cumprir os critérios em [PRODUCT.md](PRODUCT.md).
 
-## Etapa 1 — Fundação (local + CI, sem serviços externos)
+## Etapa 1 — Fundação (local + CI, sem serviços externos) — implementada em 22/10/2026
 
-| # | Tarefa | Tam. |
+| # | Tarefa | Estado |
 |---|---|---|
-| 1.1 | Monorepo pnpm, TypeScript estrito, ESLint, Vitest, `.gitignore`, `.env.example` | P |
-| 1.2 | CI no GitHub Actions: install, lint, typecheck, test, varredura de segredos (gitleaks) | P |
-| 1.3 | `packages/db`: schema Prisma + migrations + trigger de imutabilidade; `docker-compose` com Postgres | M |
-| 1.4 | `packages/core`: máquina de estados, regras de risco, versões de veredito, `settings` (kill switch, auto-publish off), audit log | M |
-| 1.5 | Verificador de citações (download, extração de texto, busca normalizada do trecho) com fixtures | M |
-| 1.6 | `packages/ai`: interface `LLMProvider`, provedor falso, contratos de saída (zod) do investigador e do auditor, prompts v1 | M |
-| 1.7 | `apps/worker`: fila `jobs` com travamento, tentativas limitadas, checagem de orçamento | M |
+| 1.1 | Monorepo pnpm, TypeScript estrito, ESLint, Vitest, `.gitignore`, `.env.example` | feito |
+| 1.2 | CI no GitHub Actions: install, lint, typecheck, test com Postgres, secretlint, migrations | feito (aguarda 1ª execução no GitHub) |
+| 1.3 | `packages/db`: migrations SQL, triggers de imutabilidade e auditoria, `docker-compose` | feito |
+| 1.4 | `packages/core`: estados, risco, `settings` (kill switch, auto-publish off), orçamento | feito |
+| 1.5 | Verificador de citações com fixtures e proteção contra URLs internas | feito |
+| 1.6 | `packages/ai`: `LLMProvider`, provedor falso, contratos zod, prompts v1, custos | feito |
+| 1.7 | `apps/worker`: fila com SKIP LOCKED, tentativas limitadas, orçamento, pausa | feito |
 
-**Saída:** critérios 1–9 da Etapa 1 cumpridos e demonstrados no CI.
+**Saída:** critérios 1–9 da Etapa 1 cumpridos localmente; falta confirmar no CI do GitHub.
 
-## Etapa 2 — Integrações reais (após D2–D5)
+## Etapa 2 — Integrações reais (após D3–D5)
 
 | # | Tarefa | Tam. |
 |---|---|---|
