@@ -1,4 +1,5 @@
-import { createClient, migrate } from "./client.ts";
+import { createClient } from "./client.ts";
+import { migrate } from "./migrate.ts";
 
 const url = process.env.DATABASE_URL;
 if (!url) {

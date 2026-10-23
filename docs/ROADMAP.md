@@ -25,14 +25,17 @@ Não avançar de etapa sem cumprir os critérios em [PRODUCT.md](PRODUCT.md).
 | 2.2 | Projeto de banco hospedado (staging), migrations, backup via Actions | P |
 | 2.3 | Workflow do Actions que executa o worker (cron + manual) | P |
 
-## Etapa 3 — Admin e revisão
+## Etapa 3 — Admin e revisão — implementada em 23/10/2026
 
-| # | Tarefa | Tam. |
+| # | Tarefa | Estado |
 |---|---|---|
-| 3.1 | Next.js + Supabase Auth (somente admin) | P |
-| 3.2 | Cadastro de alegação e evidências | M |
-| 3.3 | Tela de investigação: lado a lado investigador × auditor, status das citações | M |
-| 3.4 | Revisão: aprovar / devolver / rejeitar, nova versão, correção | M |
+| 3.1 | Next.js + login do painel (A5) | feito |
+| 3.2 | Cadastro de alegação e evidências (com verificação automática da citação) | feito |
+| 3.3 | Tela de investigação: lado a lado investigador × auditor, status das citações | feito |
+| 3.4 | Revisão: aprovar / devolver / rejeitar, veredito manual, correção, suspensão | feito |
+
+Também entraram nesta etapa: registro manual de publicação (4.3), configurações (pausa e
+orçamentos) e teste ponta a ponta com navegador real no CI.
 
 ## Etapa 4 — Saída pública
 
@@ -40,7 +43,7 @@ Não avançar de etapa sem cumprir os critérios em [PRODUCT.md](PRODUCT.md).
 |---|---|---|
 | 4.1 | Página pública por verificação + metodologia, correções, sobre, contato | M |
 | 4.2 | Geração de carrossel JPEG e legenda a partir da versão aprovada | M |
-| 4.3 | Registro manual de publicação (link do post) | P |
+| 4.3 | Registro manual de publicação (link do post) | feito na Etapa 3 |
 | 4.4 | Deploy de staging, revisão completa, depois produção (com aprovação) | P |
 
 **MVP concluído** quando os 18 critérios da seção 19 do Documento Mestre forem verificados,
