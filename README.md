@@ -3,8 +3,8 @@
 Plataforma independente de investigação e verificação de alegações públicas,
 baseada em evidências rastreáveis, auditoria adversarial e revisão humana.
 
-> **Estado:** Etapa 1 (fundação) implementada — domínio, banco, agentes com provedor falso e
-> worker. Sem provedor de IA real, sem interface web, sem deploy e sem publicação.
+> **Estado:** Etapas 1 e 3 implementadas — domínio, banco, agentes com provedor falso, worker e
+> painel de revisão. Sem provedor de IA real, sem páginas públicas, sem deploy e sem publicação.
 
 **Princípio central:** não basta uma IA dizer que algo é verdadeiro ou falso — é preciso
 mostrar como a conclusão foi alcançada.
@@ -17,6 +17,7 @@ mostrar como a conclusão foi alcançada.
 | `packages/ai` | Interface `LLMProvider`, provedor falso, contratos de saída, prompts versionados, custos |
 | `packages/db` | Migrations SQL (com triggers de imutabilidade e auditoria), repositórios, fila de jobs |
 | `apps/worker` | Processa a fila: investigador → citações → auditor → aguardando revisão humana |
+| `apps/web` | Painel (Next.js): cadastro, evidências, investigação, revisão, publicação manual, correções |
 
 ## Desenvolvimento
 
@@ -27,6 +28,13 @@ pnpm install
 cp .env.example .env            # ajuste as URLs do banco
 pnpm db:migrate                 # aplica migrations em DATABASE_URL
 TEST_DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres pnpm check
+
+# Painel: defina ADMIN_USERS e SESSION_SECRET no .env (veja .env.example)
+pnpm --filter @verifica-br/web hash-password   # gera o hash da sua senha
+pnpm --filter @verifica-br/web dev             # http://localhost:3000/admin
+
+# Teste ponta a ponta (recria o banco *_e2e indicado)
+pnpm build && E2E_DATABASE_URL=postgres://postgres:postgres@localhost:5432/vbr_e2e pnpm e2e
 ```
 
 Sem `TEST_DATABASE_URL`, os testes de banco são pulados localmente; no CI eles são obrigatórios.

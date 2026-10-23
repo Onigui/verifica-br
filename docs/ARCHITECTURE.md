@@ -1,7 +1,7 @@
 # Arquitetura mínima (aprovada em 22/10/2026 — D2)
 
-Estado: `packages/core`, `packages/ai`, `packages/db` e `apps/worker` implementados (Etapa 1).
-`apps/web` ainda não existe (Etapa 3).
+Estado: `packages/core`, `packages/ai`, `packages/db`, `apps/worker` (Etapa 1) e o painel em `apps/web`
+(Etapa 3) implementados. Páginas públicas e carrossel: Etapa 4.
 
 Objetivo: o menor conjunto de peças que cumpre o MVP e pode crescer até os "engines" do
 Documento Mestre **sem reescrita** — a lógica de domínio fica em pacotes TypeScript puros,
@@ -11,7 +11,7 @@ independentes de framework e de hospedagem.
 
 ```
                 ┌──────────────────────────── apps/web (Next.js) ─────────────────────────────┐
- Revisor ──────►│ /admin  (Supabase Auth)   cadastro, evidências, revisão, exportar carrossel │
+ Revisor ──────►│ /admin  (login próprio)   cadastro, evidências, revisão, exportar carrossel │
  Público ──────►│ /       páginas de verificação, metodologia, correções, contato            │
                 └───────────────┬─────────────────────────────────────────────────────────────┘
                                 │ usa
@@ -36,7 +36,7 @@ independentes de framework e de hospedagem.
 | Web pública + admin | **Um** app Next.js | Um deploy, uma autenticação | Separar admin se necessário |
 | Backend | Route handlers do Next + `packages/core` | NestJS separado exigiria outro serviço hospedado agora | `packages/core` é importado por um NestJS futuro sem mudança |
 | Banco | Postgres + migrations em SQL puro + driver `postgres` (A4) | Regras críticas (imutabilidade, auditoria) ficam em triggers; sem binários nativos | Mesmo schema em qualquer Postgres (Supabase ou outro) |
-| Auth | Supabase Auth, só para admin | Público não precisa de login | Papéis (revisor, editor) |
+| Auth | Login próprio do painel (A5): usuários em `ADMIN_USERS` com hash scrypt, sessão em cookie assinado (HMAC, 12 h) | Equipe pequena; não depende de serviço externo | Supabase Auth ou outro provedor quando houver mais pessoas e papéis |
 | Execução de agentes | Tabela `jobs` + `apps/worker` disparado por GitHub Actions (cron e manual) | Investigação leva minutos; não depende do PC ligado | Worker dedicado (Render/Railway) ou fila Redis quando o volume justificar |
 | IA | `LLMProvider` + adaptador Anthropic API; provedor falso para testes | Troca de fornecedor sem tocar no domínio | Outros adaptadores |
 | Busca de evidências | Ferramenta de busca do provedor de IA + **verificador de citações** próprio | Evita citações inventadas | Google Fact Check API, fontes cadastradas |

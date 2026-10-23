@@ -1,5 +1,6 @@
 import { randomBytes } from "node:crypto";
-import { createClient, migrate, type Sql } from "./client.ts";
+import { createClient, type Sql } from "./client.ts";
+import { migrate } from "./migrate.ts";
 
 /** URL administrativa para testes; ausente = testes de banco são pulados (o CI exige presença). */
 export const TEST_DATABASE_URL = process.env.TEST_DATABASE_URL;

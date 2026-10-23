@@ -9,12 +9,13 @@
   "scripts": {
     "lint": "eslint .",
     "typecheck": "pnpm -r --parallel typecheck",
-    "build": "pnpm typecheck",
+    "build": "pnpm typecheck && pnpm --filter @verifica-br/web build",
     "test": "vitest run",
     "secrets": "secretlint \"**/*\"",
     "db:migrate": "pnpm --filter @verifica-br/db migrate",
     "worker": "pnpm --filter @verifica-br/worker start",
-    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm secrets"
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm secrets",
+    "e2e": "pnpm --filter @verifica-br/web e2e"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

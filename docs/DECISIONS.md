@@ -24,4 +24,5 @@ por nova entrada que a substitua.
 | A3 | 20/10/2026 | Publicação no Instagram manual no MVP | Documento Mestre §12.3 |
 | D1 | 22/10/2026 | Não publicar antes do 2º turno; piloto interno; primeira publicação após 26/10 e com parecer jurídico | Aprovação do responsável ("Perfeito, continue") |
 | D2 | 22/10/2026 | Arquitetura mínima de [ARCHITECTURE.md](ARCHITECTURE.md): monorepo, Next.js único, `core`/`ai`/`db`, worker via GitHub Actions | Aprovação do responsável |
+| A5 | 23/10/2026 | Login do painel próprio (usuários em variável de ambiente, hash scrypt, sessão assinada) em vez de Supabase Auth | Técnica: tira a dependência da decisão D3 e serve a uma equipe pequena. Trocável depois sem mexer no domínio |
 | A4 | 22/10/2026 | Banco com migrations em SQL puro + driver `postgres`, em vez de Prisma | Técnica: o Prisma precisa baixar binários nativos (bloqueados no ambiente de desenvolvimento) e triggers de imutabilidade são SQL de qualquer forma. Reversível |

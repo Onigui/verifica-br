@@ -11,7 +11,6 @@ import {
   getClaim,
   getSettings,
   latestVersion,
-  migrate,
   proposeCorrection,
   recordManualPublication,
   recordReview,
@@ -22,6 +21,7 @@ import {
   withActor,
   type Sql,
 } from "../src/index.ts";
+import { migrate } from "../src/migrate.ts";
 import { createTestDatabase, TEST_DATABASE_URL } from "../src/testing.ts";
 
 const human: Actor = { type: "human", id: "revisora-1" };
