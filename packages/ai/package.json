@@ -1,0 +1,17 @@
+{
+  "name": "@verifica-br/ai",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./testing": "./src/testing.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@verifica-br/core": "workspace:*",
+    "zod": "^4.6.7"
+  }
+}

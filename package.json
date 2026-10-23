@@ -1,0 +1,35 @@
+{
+  "name": "verifica-br",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "pnpm -r --parallel typecheck",
+    "build": "pnpm typecheck",
+    "test": "vitest run",
+    "secrets": "secretlint \"**/*\"",
+    "db:migrate": "pnpm --filter @verifica-br/db migrate",
+    "worker": "pnpm --filter @verifica-br/worker start",
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm secrets"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@secretlint/secretlint-rule-preset-recommend": "^13.0.7",
+    "@types/node": "^22.20.5",
+    "eslint": "^9.39.5",
+    "secretlint": "^13.0.7",
+    "tsx": "^4.23.15",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.72.0",
+    "vitest": "^3.2.7"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

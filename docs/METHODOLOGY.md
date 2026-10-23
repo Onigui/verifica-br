@@ -35,11 +35,16 @@ registrar exigências extras, não para dispensar revisão.
 ## Fluxo e estados
 
 ```
-rascunho → em_investigacao → em_auditoria → aguardando_revisao
-        → aprovada → publicada → (corrigida | suspensa)
-aguardando_revisao → devolvida → em_investigacao
-aguardando_revisao → rejeitada
+draft → investigating → auditing → awaiting_review → approved → published ⇄ suspended
+draft → awaiting_review                 (caso montado só por humanos)
+investigating | auditing → draft        (falha ou orçamento: volta sem perder dados)
+awaiting_review → returned → investigating | awaiting_review
+awaiting_review → rejected
+approved | published | suspended → awaiting_review   (correção: nova versão + registro público)
 ```
+
+A fonte da verdade é `packages/core/src/workflow.ts`. Aprovar, devolver e rejeitar exigem
+revisão humana registrada sobre a versão mais recente; o sistema não publica sozinho.
 
 - O auditor recebe alegação, evidências e conclusão provisória com a instrução:
   *"Tente demonstrar que a conclusão proposta está errada."*
