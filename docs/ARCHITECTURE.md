@@ -37,8 +37,8 @@ independentes de framework e de hospedagem.
 | Backend | Route handlers do Next + `packages/core` | NestJS separado exigiria outro serviço hospedado agora | `packages/core` é importado por um NestJS futuro sem mudança |
 | Banco | Postgres + migrations em SQL puro + driver `postgres` (A4) | Regras críticas (imutabilidade, auditoria) ficam em triggers; sem binários nativos | Mesmo schema em qualquer Postgres (Supabase ou outro) |
 | Auth | Login próprio do painel (A5): usuários em `ADMIN_USERS` com hash scrypt, sessão em cookie assinado (HMAC, 12 h) | Equipe pequena; não depende de serviço externo | Supabase Auth ou outro provedor quando houver mais pessoas e papéis |
-| Execução de agentes | Tabela `jobs` + `apps/worker` disparado por GitHub Actions (cron e manual) | Investigação leva minutos; não depende do PC ligado | Worker dedicado (Render/Railway) ou fila Redis quando o volume justificar |
-| IA | `LLMProvider` + adaptador Anthropic API; provedor falso para testes | Troca de fornecedor sem tocar no domínio | Outros adaptadores |
+| Execução de agentes | Tabela `jobs` + `apps/worker` disparado por GitHub Actions (`worker.yml`: a cada 15 min e manual; aplica migrations pendentes antes) | Investigação leva minutos; não depende do PC ligado | Worker dedicado (Render/Railway) ou fila Redis quando o volume justificar |
+| IA | `LLMProvider` + adaptador Gemini (faixa gratuita, REST); provedor falso para testes | Custo zero para começar; troca de fornecedor sem tocar no domínio | Anthropic ou outro adaptador pago quando houver orçamento |
 | Busca de evidências | Ferramenta de busca do provedor de IA + **verificador de citações** próprio | Evita citações inventadas | Google Fact Check API, fontes cadastradas |
 | Carrossel | HTML → JPEG renderizado no servidor (Playwright ou `@vercel/og`) | Instagram aceita só JPEG; sem imagens geradas por IA | Publicação via API oficial |
 | CI | GitHub Actions: lint, typecheck, testes com Postgres real, secretlint, migrations em banco limpo | Grátis para repositório público | Deploy de preview |

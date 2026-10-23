@@ -17,13 +17,16 @@ Não avançar de etapa sem cumprir os critérios em [PRODUCT.md](PRODUCT.md).
 
 **Saída:** critérios 1–9 da Etapa 1 cumpridos localmente e no CI do GitHub.
 
-## Etapa 2 — Integrações reais (após D3–D5)
+## Etapa 2 — Integrações reais — em andamento
 
-| # | Tarefa | Tam. |
+| # | Tarefa | Estado |
 |---|---|---|
-| 2.1 | Adaptador Anthropic API + busca na web; teste real com 3 alegações de baixo risco | M |
-| 2.2 | Projeto de banco hospedado (staging), migrations, backup via Actions | P |
-| 2.3 | Workflow do Actions que executa o worker (cron + manual) | P |
+| 2.1 | Adaptador de IA (Gemini, faixa gratuita); teste real com 3 alegações de baixo risco | adaptador pronto com testes simulados; teste real aguarda chave (D4) |
+| 2.2 | Banco hospedado: Supabase `verifica-br`, migrations 0001–0003 aplicadas, API pública bloqueada | feito |
+| 2.3 | Workflow do Actions que executa o worker (cron a cada 15 min + manual) | feito; aguarda secrets |
+| 2.4 | Deploy do painel na Vercel (conta nova) | aguarda acesso ao time na Vercel |
+| 2.5 | Rodada de leitura de páginas: o worker baixa as URLs propostas e o agente extrai trechos literais (compensa a falta de busca na web na faixa gratuita) | a fazer |
+| 2.6 | Backup do banco fora do repositório público | a definir (plano gratuito sem backup) |
 
 ## Etapa 3 — Admin e revisão — implementada em 23/10/2026
 
